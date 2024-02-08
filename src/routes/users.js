@@ -3,7 +3,7 @@ const router = express.Router()
 //const readFile = require('../utils/readFile')
 const User = require('../models/users')
 const { createJWT, verifyJWT } = require('../middlewares/authentication')
-const { isAdmin } = require('../middlewares/authorization')
+//const { isAdmin } = require('../middlewares/authorization')
 
 
 router.post('/login', async (req, res) => {
@@ -86,7 +86,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', isAdmin,  async (req, res) => {
+router.delete('/:id', /*isAdmin,*/  async (req, res) => {
     res.send({ msg: "user deleted", data: {} })  
 })
 
