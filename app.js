@@ -7,9 +7,11 @@ const { connect } = require('./src/utils/db')
 
 //import paths
 const usersRoute = require('./src/routes/users')
+const postRoute = require("./src/routes/createPost")
 
 //conectar la base de datos
 connect()
+
 
 app.use(express.json())
 
@@ -19,6 +21,7 @@ app.get('/', (req, res) => {
 
 //app.use(verifyJWT)
 app.use('/users', usersRoute)
+app.use(`/post`, postRoute )
 
 app.listen(port, () => {
     console.log('Server is ready')

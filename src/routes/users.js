@@ -4,32 +4,6 @@ const router = express.Router()
 const User = require('../models/users')
 const { createJWT, verifyJWT } = require('../middlewares/authentication')
 //const { isAdmin } = require('../middlewares/authorization')
-
-
-router.post('/login', async (req, res) => {
-    try {
-        const credential = req.body
-        const user = await User.findOne({email: credential.email})
-        if (!user) {
-            res.status(401).send({msg: "user not found"})
-        }else{
-            if (user.password != credential.password) {
-                res.status(401).send({msg: "invalid password"})
-            } else {
-                const token = createJWT({_id: user._id})
-                res.send({msg: "login user", data: token})
-            }
-        }
-        
-        
-    } catch (error) {
-        console.log(error)
-        res.status(400).send({msg: "login ivalid", error: error})
-    }   
-})
-
-router.use(verifyJWT)
-
 router.get('/', async (req, res) => {
     try {
         const users = await User.find()
@@ -71,14 +45,42 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.post('/login', async (req, res) => {
+    try {
+        const credential = req.body
+        const user = await User.findOne({email: credential.email})
+        if (!user) {
+            res.status(401).send({msg: "user not found"})
+        }else{
+            if (user.password != credential.password) {
+                res.status(401).send({msg: "invalid password"})
+            } else {
+                const token = createJWT({_id: user._id})
+                res.send({msg: "login user", data: token})
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({msg: "login ivalid", error: error})
+    }   
+})
+
+router.use(verifyJWT)
+
 router.put('/:id', async (req, res) => {
     try {
         console.log(req.user) 
         const id = req.params.id
+        const userUpdate = req.body.email
+        const passwordUpdate = req.body.password
         if (id != req.user._id) {
             res.status(401).send({msg: "user not authorized"}) 
         } else {
-            res.status(201).send({msg: "user updated"})
+            const result = await User.findByIdAndUpdate(id, {$set: {
+                email: userUpdate,
+                password: passwordUpdate
+            }})
+            res.status(201).send({msg: "user updated", data: result})
         }
         
     } catch (error) {
@@ -86,8 +88,21 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', /*isAdmin,*/  async (req, res) => {
-    res.send({ msg: "user deleted", data: {} })  
+router.delete('/:id', async (req, res) => {
+    try {
+        console.log(req.user) 
+        const id = req.params.id
+        if (id != req.user._id) {
+            res.status(401).send({msg: "user not authorized"}) 
+        } else {
+            const result = await User.findByIdAndDelete(id)
+            res.status(201).send({msg: "user removed", data: result})
+        }
+        
+    } catch (error) {
+        res.status(400).send({msg: "user not removed"})
+    }
+     
 })
 
 

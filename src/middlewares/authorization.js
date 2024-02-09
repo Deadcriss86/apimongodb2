@@ -1,4 +1,4 @@
-function isAdmin(req, res, next) {
+/*function isAdmin(req, res, next) {
     if (req.user.role == "admin") {
       next()  
     } else {
@@ -17,4 +17,4 @@ function isSeller(req, res, next) {
 module.exports = {
     isAdmin,
     isSeller
-}
+}*/

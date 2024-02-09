@@ -12,21 +12,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    user: {
-        type: String,required: true
-    },
-    detalles: {
-        type: String,required: true
-    },
-    urlImage: {
-        type: String,required: true
-    },
-    titulo: {
-        type: String,required: true
-    },
 },
 {
-    timestamps: true,
      statics:{
         encryptPassword:async()=>{
             const salt = await bcrypt.genSalt(15);

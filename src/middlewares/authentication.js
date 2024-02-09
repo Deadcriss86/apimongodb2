@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const JWT_SIGN = process.env.JWT_SIGN
+const JWT_SIGN = process.env.JWT_SIGN // hash
 const User = require('../models/users')
 
 function createJWT(data) {
